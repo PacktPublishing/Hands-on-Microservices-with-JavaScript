@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>github avatars</title>
+  </head>
+  <body>
+    <main id="main"></main>
+    <script>
+      function createAvatar(url) {
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            let img = document.createElement("img");
+            img.src = url;
+            document.getElementById("main").appendChild(img);
+            resolve();
+          }, 1500);
+        });
+      }
+
+      const usernames = ["TuralSuleymani", "rasulhsn"];
+      const url = "https://api.github.com/users/";
+
+      let requests = usernames.map((name) => fetch(url.concat(name)));
+      Promise.all(requests)
+        .then((responses) => Promise.all(responses.map((r) => r.json())))
+        .then((gitusers) =>
+          gitusers.forEach((user) => createAvatar(user.avatar_url))
+        );
+    </script>
+  </body>
+</html>

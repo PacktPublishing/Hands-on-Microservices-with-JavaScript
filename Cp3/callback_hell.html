@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Callback hell</title>
+    <script src="js/operations.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/main.css" />
+  </head>
+  <body>
+    <main id="main"></main>
+    <script>
+      addScript("js/app.js", (script, error) => {
+        if (error) {
+          addErrorMessage("main", error.message);
+        } else {
+          setTimeout(() => {
+            let message = execute();
+            addSuccessMessage("main", message);
+            setTimeout(() => {
+              message = "operation completed successfully";
+              addSuccessMessage("main", message);
+              setTimeout(() => {
+                message = "ready for another execution";
+                addSuccessMessage("main", message);
+              }, 2000);
+            }, 3000);
+          }, 4000);
+        }
+      });
+    </script>
+  </body>
+</html>

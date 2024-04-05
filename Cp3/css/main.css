@@ -1,0 +1,8 @@
+.success {
+    background-color: rgb(76, 249, 76);
+    font-size: 1.2rem;
+  }
+  .fail {
+    background-color: rgb(237, 60, 60);
+    font-size: 1.2rem;
+  }
