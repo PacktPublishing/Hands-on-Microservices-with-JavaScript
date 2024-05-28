@@ -24,6 +24,8 @@ model Transaction {
 
 enum Status {
   CREATED
-  SETTLED
   FAILED
+  APPROVED
+  DECLINED
+  FRAUD
 }
