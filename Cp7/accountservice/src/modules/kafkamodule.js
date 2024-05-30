@@ -1,16 +1,20 @@
 const { Kafka } = require('kafkajs');
 const Account = require('../models/account');
+const path = require('path');
+const { createConfig } = require('../config/config')
 
+const configPath = path.join(__dirname, '../../configs/.env');
+const appConfig = createConfig(configPath);
 const kafka = new Kafka({
-    clientId: 'account-service',
-    brokers: ['localhost:9092'], // Replace with your broker details
+    clientId: appConfig.kafka.clientId,
+    brokers: [appConfig.kafka.brokers],
 });
 
-const consumer = kafka.consumer({ groupId: 'my-account-group' });
+const consumer = kafka.consumer({ groupId: appConfig.kafka.groupId });
 
 const consumerModule = async () => {
     await consumer.connect();
-    await consumer.subscribe({ topic: 'transaction-service-topic' });
+    await consumer.subscribe({ topic: appConfig.kafka.topic });
 
     await consumer.run({
         eachMessage: async ({ topic, partition, message }) => {

@@ -1,6 +1,6 @@
 const express = require('express');
 const v1 = require('./routes/v1');
-const consumerModule = require('./modules/kafkmodule'); // Adjust the path
+const consumerModule = require('./modules/kafkamodule');
 const app = express();
 
 consumerModule();
