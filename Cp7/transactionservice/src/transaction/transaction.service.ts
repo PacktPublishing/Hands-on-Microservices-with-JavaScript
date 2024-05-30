@@ -18,7 +18,7 @@ export class TransactionService {
     const { accountId, description } = createTransactionDto;
     const accountApiResponse =
       await this.httpService.axiosRef.get<AccountApiResponse>(
-        `http://localhost:3001/v1/accounts/${createTransactionDto.accountId}`
+        `http://localhost:3001/v1/accounts/${accountId}`
       );
     const { account } = accountApiResponse.data;
     if (!account) {

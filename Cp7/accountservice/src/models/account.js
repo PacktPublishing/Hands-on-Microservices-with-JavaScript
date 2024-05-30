@@ -22,6 +22,10 @@ const AccountSchema = new Schema(
             enum: ['new', 'active', 'inactive', 'blocked'],
             default: 'new',
         },
+        count: { // New column for Fraud
+            type: Number,
+            default: 0, // Optional:(defaults to 0)
+        },
         createdAt: {
             type: Date,
             default: Date.now,

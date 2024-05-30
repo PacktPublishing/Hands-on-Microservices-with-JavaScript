@@ -15,15 +15,23 @@ const consumerModule = async () => {
     await consumer.run({
         eachMessage: async ({ topic, partition, message }) => {
 
-            const account = JSON.parse(message.value.toString());
-            const accountId = account.accountId;
+            const transaction = JSON.parse(message.value.toString());
+            const accountId = transaction.accountId;
             try {
                 const blockedAccount = await Account.findOne({ accountId, status: { $ne: 'blocked' } });
 
                 if (!blockedAccount) {
-                    const updatedAccount = await Account.updateOne({ accountId }, { $inc: { count: 1 } });
+                    const updatedAccount = await Account.findOneAndUpdate(
+                        { _id: accountId },
+                        { $inc: { count: 1 } },
+                        { new: true }
+                    );
                     if (updatedAccount.count === 3)
-                        await Account.updateOne({ accountId }, { status: 'blocked' });
+                        await Account.findOneAndUpdate(
+                            { _id: accountId },
+                            { status: 'blocked' },
+                            { new: true }
+                        );
                 }
                 else
                     console.log(`not a valid accountId ${accountId}`);
