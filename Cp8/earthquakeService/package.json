@@ -1,5 +1,5 @@
 {
-  "name": "earthquakeervice",
+  "name": "earthquakeservice",
   "version": "1.0.0",
   "description": "Earthquake Service",
   "main": "index.js",
