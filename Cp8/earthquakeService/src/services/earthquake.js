@@ -16,7 +16,7 @@ class EarthquakeEventProducer {
     }
 
     async runEarthquake() {
-        const configPath = path.join(__dirname, '../configs/.env');
+        const configPath = path.join(__dirname, '../../configs/.env');
         const appConfig = createConfig(configPath);
 
         // Returns a new writable stream
