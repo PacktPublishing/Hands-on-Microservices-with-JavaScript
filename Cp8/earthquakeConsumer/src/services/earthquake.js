@@ -12,7 +12,7 @@ class EarthquakeEventConsumer {
             'metadata.broker.list': this.appConfig.kafka.brokers,
             'group.id': this.appConfig.kafka.groupID,
             'socket.keepalive.enable': true,
-            'enable.auto.commit': false
+            'enable.auto.commit': true
         }, {}, {
             topics: this.appConfig.kafka.topic,
             waitInterval: 0,
