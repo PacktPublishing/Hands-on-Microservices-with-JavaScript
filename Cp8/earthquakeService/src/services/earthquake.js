@@ -39,10 +39,10 @@ class EarthquakeEventProducer {
             const queuedSuccess = stream.write(Buffer.from(JSON.stringify(event)));
 
             if (queuedSuccess) {
-                console.log('We queued our message!');
+                console.log('Message has been queued!');
             } else {
                 // If the stream's queue is full
-                console.log('Too many messages in our queue already');
+                console.log('Too many messages in queue already');
             }
         }, 100);
     }
