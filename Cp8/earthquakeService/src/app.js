@@ -3,7 +3,7 @@ const earthquake = require('./services/earthquake');
 
 const app = express();
 
-// Function to handle incoming earthquake event data
+// Function to run streaming
 app.post('/earthquake-events', async (req, res) => {
     new earthquake().runEarthquake();
 });
