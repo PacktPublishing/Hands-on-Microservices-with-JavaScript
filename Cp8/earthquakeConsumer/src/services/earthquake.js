@@ -3,24 +3,26 @@ const { createConfig } = require('../config/config');
 const path = require('path');
 
 class EarthquakeEventConsumer {
-
-    async consumeData() {
+    constructor() {
         const configPath = path.join(__dirname, '../../configs/.env');
-        const appConfig = createConfig(configPath);
+        this.appConfig = createConfig(configPath);
 
-        // Read from the librdtesting-01 topic... note that this creates a new stream on each call!
-        var stream = Kafka.KafkaConsumer.createReadStream({
-            'metadata.broker.list': appConfig.kafka.brokers,
-            'group.id': appConfig.kafka.groupID,
+        // Create the Kafka consumer stream here (once)
+        this.stream = Kafka.KafkaConsumer.createReadStream({
+            'metadata.broker.list': this.appConfig.kafka.brokers,
+            'group.id': this.appConfig.kafka.groupID,
             'socket.keepalive.enable': true,
             'enable.auto.commit': false
         }, {}, {
-            topics: appConfig.kafka.topic,
+            topics: this.appConfig.kafka.topic,
             waitInterval: 0,
             objectMode: false
         });
+    }
 
-        stream.on('data', (message) => {
+    async consumeData() {
+        // Now use the pre-created stream for data consumption
+        this.stream.on('data', (message) => {
             console.log('Got message');
             console.log(JSON.parse(message));
         });
