@@ -2,6 +2,7 @@ const path = require('path');
 const db = require('./db');
 const app = require('./app');
 const { createConfig } = require('./config/config');
+//const { logger } = require('./log/logger');
 
 async function execute() {
     const configPath = path.join(__dirname, '../configs/.env');
@@ -9,13 +10,13 @@ async function execute() {
 
     await db.connect(appConfig);
     const server = app.listen(appConfig.port, () => {
-        console.log('account service started', { port: appConfig.port });
+        //logger.info('account service started', { port: appConfig.port });
     });
 
     const closeServer = () => {
         if (server) {
             server.close(() => {
-                console.log('server closed');
+                //logger.info('server closed');
                 process.exit(1);
             });
         } else {
@@ -24,7 +25,7 @@ async function execute() {
     };
 
     const unexpectedError = (error) => {
-        console.log('unhandled error', { error });
+        //logger.error('unhandled error', { stack: { error } });
         closeServer();
     };
 
