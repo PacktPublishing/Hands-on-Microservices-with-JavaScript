@@ -11,7 +11,7 @@ const createUser = async (req, res) => {
         if (existingUser) {
             return res.status(400).json({ message: 'Email already exists' });
         }
-        const user = await userService.createUser({ email, password });
+        await userService.createUser({ email, password });
         res.status(201).json({ message: 'User created successfully' });
     } catch (error) {
         console.error(error);
