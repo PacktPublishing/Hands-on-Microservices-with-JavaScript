@@ -21,11 +21,12 @@
     "express": "^4.19.2",
     "express-mongo-sanitize": "^2.2.0",
     "joi": "^17.12.3",
+    "jsonwebtoken": "^9.0.2",
     "kafkajs": "^2.2.4",
     "mongoose": "^8.3.2",
     "morgan": "1.10.0",
     "winston": "3.13.0",
-    "winston-logstash":"1.2.1"
+    "winston-logstash": "1.2.1"
   },
   "devDependencies": {
     "nodemon": "^3.1.0"

@@ -5,6 +5,7 @@ const envVarsSchema = Joi.object()
     .keys({
         PORT: Joi.number().default(3000),
         MONGODB_URL: Joi.string().required().description('Mongo DB url'),
+        SECRET_ACCESS_TOKEN: Joi.string().hex().required(),
         KAFKA_CLIENT_ID: Joi.string().required(),
         KAFKA_BROKERS: Joi.string().required(),
         KAFKA_TOPIC: Joi.string().required(),
@@ -33,6 +34,9 @@ function createConfig(configPath) {
             brokers: envVars.KAFKA_BROKERS,
             topic: envVars.KAFKA_TOPIC,
             groupId: envVars.KAFKA_GROUP_ID,
+        },
+        jwt: {
+            access_token: envVars.SECRET_ACCESS_TOKEN
         }
     };
 }
