@@ -7,4 +7,5 @@ const router = Router();
 
 router.post('/register', validate(loginSchema), userController.createUser);
 router.post('/login', validate(loginSchema), userController.loginUser);
+router.post('/token', validate(loginSchema), userController.getAccessTokenbyRefreshToken);
 module.exports = router;

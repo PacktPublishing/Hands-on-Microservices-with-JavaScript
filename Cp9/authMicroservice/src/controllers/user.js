@@ -41,9 +41,48 @@ const loginUser = async (req, res) => {
 
         const payload = { userId: user._id }; // Include only essential user data
         const jwtSecret = appConfig.jwt.access_token; // Replace with your secret from an environment variable
-        const accessToken = await jwt.sign(payload, jwtSecret, { expiresIn: '1h' }); // Set appropriate expiration time
+        const jwtRefreshTokenSecret = appConfig.jwt.refresh_token;
+
+        const accessToken = await jwt.sign(payload, jwtSecret, { expiresIn: '5m' }); // Set appropriate expiration time
+        const refreshToken = await jwt.sign(payload, jwtRefreshTokenSecret, { expiresIn: '7d' });
+
         // Send successful login response
-        res.status(200).json({ accessToken: accessToken });
+        res.status(200).json({ accessToken: accessToken, refreshToken: refreshToken });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
+const getAccessTokenbyRefreshToken = async (req, res) => {
+    try {
+        const refreshToken = req.body.refreshToken;
+
+        if (!refreshToken) {
+            return res.status(400).json({ message: 'Missing refresh token' });
+        }
+
+        const configPath = path.join(__dirname, '../../configs/.env');
+        const appConfig = createConfig(configPath);
+        const refreshTokenSecret = appConfig.jwt.refresh_token;
+
+        // Verify the refresh token
+        jwt.verify(refreshToken, refreshTokenSecret, (err, decoded) => {
+            if (err) {
+                return res.status(401).json({ message: 'Invalid refresh token' });
+            }
+
+            const userId = decoded.userId;
+
+            // Fetch user data (optional, if using user model)
+            //const user = await userService.getUserById(userId);
+
+            // Generate a new access token
+            const newAccessTokenPayload = { userId };
+            const newAccessToken = jwt.sign(newAccessTokenPayload, appConfig.jwt.access_token, { expiresIn: '5m' });
+
+            res.status(200).json({ accessToken: newAccessToken });
+        });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Server error' });
@@ -52,5 +91,6 @@ const loginUser = async (req, res) => {
 
 module.exports = {
     createUser,
-    loginUser
+    loginUser,
+    getAccessTokenbyRefreshToken
 };
