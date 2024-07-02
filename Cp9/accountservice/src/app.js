@@ -1,7 +1,7 @@
 const express = require('express');
 const v1 = require('./routes/v1');
 const consumerModule = require('./modules/kafkamodule');
-const morganMiddleware = require('./morganmiddleware');
+const morganMiddleware = require('./middlewares/morganmiddleware');
 const jwtVerifyMiddleware = require('./middlewares/verify');
 const app = express();
 

@@ -1,5 +1,5 @@
 const morgan = require('morgan');
-const { logger } = require('./log/logger-logstash');
+const { logger } = require('../log/logger-logstash');
 
 // Custom JSON format string for request logging
 const morganFormat = JSON.stringify({
