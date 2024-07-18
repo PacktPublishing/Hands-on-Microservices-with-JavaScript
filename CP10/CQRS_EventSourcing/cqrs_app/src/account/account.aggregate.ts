@@ -81,7 +81,6 @@ export class AccountAggregate extends AggregateRoot {
     }
 
     return aggregate;
-
   }
 }
 

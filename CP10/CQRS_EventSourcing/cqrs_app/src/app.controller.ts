@@ -1,9 +1,9 @@
 import {Module} from '@nestjs/common'
 import {AccountUnitController} from './api/account.controller'
-import {CommandBus} from '@nestjs/cqrs' // Angenommen, dieser Service ist erforderlich
+import {CommandBus} from '@nestjs/cqrs'
 
 @Module({
   controllers: [AccountUnitController],
-  providers: [CommandBus], // und andere benötigte Services
+  providers: [CommandBus], 
 })
 export class StorageModule {}
