@@ -1,10 +1,10 @@
 /* eslint-disable prettier/prettier */
 import { Injectable } from "@nestjs/common";
 import { CreateTransactionDto } from "./dto/create-transaction.dto";
-import { PrismaService } from "src/prisma/prisma.service";
+import { PrismaService } from "../prisma/prisma.service";
 import { HttpService } from "@nestjs/axios";
 import { AccountApiResponse } from "./dto/account.dto";
-import { KafkaService } from "src/kafka/kafka.service";
+import { KafkaService } from "../kafka/kafka.service";
 import { Status } from "@prisma/client";
 @Injectable()
 export class TransactionService {
