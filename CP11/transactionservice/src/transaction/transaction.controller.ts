@@ -1,8 +1,8 @@
 /* eslint-disable prettier/prettier */
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, HttpStatus, Res } from '@nestjs/common';
 import { TransactionService } from './transaction.service';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
-
+import { Response } from 'express';
 @Controller('transaction')
 export class TransactionController {
   constructor(
@@ -10,8 +10,13 @@ export class TransactionController {
   ) {}
 
   @Post()
-  create(@Body() createTransactionDto: CreateTransactionDto) {
-    return this.transactionService.create(createTransactionDto);
+  async create(@Body() createTransactionDto: CreateTransactionDto, @Res() response: Response) {
+    try {
+      const result = await this.transactionService.create(createTransactionDto);
+      return response.status(HttpStatus.CREATED).json(result);
+    } catch (e) {
+      return response.status(HttpStatus.BAD_REQUEST).json({ message: e.message });
+    }
   }
 
   @Post(':id')

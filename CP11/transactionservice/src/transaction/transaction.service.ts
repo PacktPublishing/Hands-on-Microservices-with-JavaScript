@@ -16,10 +16,15 @@ export class TransactionService {
 
   async create(createTransactionDto: CreateTransactionDto) {
     const { accountId, description } = createTransactionDto;
-    const accountApiResponse =
-      await this.httpService.axiosRef.get<AccountApiResponse>(
+    let accountApiResponse = null;
+    try{
+      accountApiResponse = await this.httpService.axiosRef.get<AccountApiResponse>(
         `http://localhost:3001/v1/accounts/${accountId}`
       );
+    }
+    catch(e) {
+      let result = e;
+    }
     const { account } = accountApiResponse.data;
     if (!account) {
       throw new Error("Transaction creation failed: Account not found");

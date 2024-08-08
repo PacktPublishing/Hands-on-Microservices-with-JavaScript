@@ -3,7 +3,7 @@ import { TransactionService } from './transaction.service';
 import { TransactionController } from './transaction.controller';
 import { PrismaModule } from '../prisma/prisma.module';
 import { HttpModule } from '@nestjs/axios';
-import { KafkaService } from 'src/kafka/kafka.service';
+import { KafkaService } from '../kafka/kafka.service';
 import { ConfigService } from '@nestjs/config';
 
 @Module({
