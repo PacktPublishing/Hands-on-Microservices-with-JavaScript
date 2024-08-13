@@ -26,12 +26,15 @@ const createAccount = async (req, res) => {
 };
 
 const deleteAccountById = async (req, res) => {
-    await accountService.deleteAccountById(req.params.id);
-
-    res.status(204).json({
-        success: true
-    });
-};
+    const isDeleted = await accountService.deleteAccountById(req.params.id);
+ 
+    if(isDeleted)
+     res.status(204).json({
+         success: true
+     });
+     else
+     res.status(400).json({ success: false, message: 'No valid data to delete' });
+ };
 
 const updateAccountById = async (req, res) => {
     const result = await accountService.updateAccountById(req.params.id, req.body);

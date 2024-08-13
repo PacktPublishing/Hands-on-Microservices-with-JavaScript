@@ -17,7 +17,11 @@ function createAccount(name, number, type, status) {
 
 //delete account by account id
 async function deleteAccountById(id) {
-    await Account.findByIdAndDelete(id);
+   const deletedAccount = await Account.findByIdAndDelete(id);
+   if(deletedAccount)
+    return true;
+    else
+    return false;
 }
 
 //'new', 'active', 'inactive', 'blocked'
