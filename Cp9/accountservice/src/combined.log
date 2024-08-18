@@ -1,2 +1,0 @@
-{"buildInfo":{"nodeVersion":"v20.12.1","version":"1.0.0"},"level":"info","message":"Request received for logging","method":"GET","responseTime":"11.342 ms","service":"account-microservice","status":"200","url":"/v1/accounts"}
-{"buildInfo":{"nodeVersion":"v20.12.1","version":"1.0.0"},"level":"info","message":"Request received for logging","method":"GET","responseTime":"13.711 ms","service":"account-microservice","status":"200","url":"/v1/accounts"}
