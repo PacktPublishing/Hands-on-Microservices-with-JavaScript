@@ -1,0 +1,80 @@
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - app-network-account
+
+  zookeeper:
+    image: bitnami/zookeeper:3.8
+    networks:
+      - app-network-account
+    ports:
+      - "2181:2181"
+    volumes:
+      - zookeeper_data:/bitnami
+    environment:
+      ALLOW_ANONYMOUS_LOGIN: "yes"
+
+  kafka2:
+    image: bitnami/kafka:3.6
+    ports:
+      - "9093:9093"
+    volumes:
+      - kafka_data1:/bitnami
+    networks:
+      - app-network-account
+    environment:
+      KAFKA_CFG_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_CFG_LISTENERS: "PLAINTEXT://:9093" # Use only one listener
+      KAFKA_CFG_ADVERTISED_LISTENERS: "PLAINTEXT://kafka2:9093"
+    depends_on:
+      - zookeeper
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    ports:
+      - 9100:8080
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka2:9092
+      KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
+      KAFKA_CLUSTERS_0_JMXPORT: 9997
+    depends_on:
+      - kafka2
+    networks:
+      - app-network-account
+
+  account-service:
+    build:
+      context: ../accountservice
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    environment:
+      PORT: 3001
+      MONGODB_URL: mongodb://mongodb:27017/account-microservice
+      KAFKA_CLIENT_ID: account-service
+      KAFKA_BROKERS: kafka2:9092
+      KAFKA_TOPIC: transaction-service-topic
+      KAFKA_GROUP_ID: account-group
+    depends_on:
+      - mongodb
+      - kafka2
+    networks:
+      - app-network-account
+
+networks:
+  app-network-account:
+    driver: bridge
+
+volumes:
+  zookeeper_data:
+    driver: local
+  kafka_data1:
+    driver: local
+  mongodb_data:

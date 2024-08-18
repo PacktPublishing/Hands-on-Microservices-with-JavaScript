@@ -1,0 +1,119 @@
+services:
+  postgres:
+    image: postgres
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=tservice_db
+    ports:
+      - 5438:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    env_file:
+      - .env
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
+      - POSTGRES_HOST=postgreshost
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - PGADMIN_CONFIG_SERVER_MODE=False
+      - PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED=False
+    ports:
+      - ${PGADMIN_PORT}:80
+    depends_on:
+      - postgres
+    user: root
+    volumes:
+      - postgres_data:/var/lib/pgadmin/data
+    networks:
+      - app-network
+
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - app-network
+
+  zookeeper:
+    image: bitnami/zookeeper:3.8
+    networks:
+      - app-network
+    ports:
+      - '2181:2181'
+    volumes:
+      - zookeeper_data:/bitnami
+    environment:
+      ALLOW_ANONYMOUS_LOGIN: 'yes'
+
+  kafka1:
+    image: bitnami/kafka:3.6
+    ports:
+      - '9092:9092'
+    volumes:
+      - kafka_data1:/bitnami
+    networks:
+      - app-network
+    environment:
+      KAFKA_CFG_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_CFG_LISTENERS: 'PLAINTEXT://:9092' # Use only one listener
+      KAFKA_CFG_ADVERTISED_LISTENERS: 'PLAINTEXT://kafka1:9092'
+    depends_on:
+      - zookeeper
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    ports:
+      - 9100:8080
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka1:9092
+      KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
+      KAFKA_CLUSTERS_0_JMXPORT: 9997
+    depends_on:
+      - kafka1
+    networks:
+      - app-network
+
+  account-service:
+    build:
+      context: ../accountservice
+      dockerfile: Dockerfile
+    ports:
+      - '3001:3001'
+    environment:
+      PORT: 3001
+      MONGODB_URL: mongodb://mongodb:27017/account-microservice
+      KAFKA_CLIENT_ID: account-service
+      KAFKA_BROKERS: kafka1:9092
+      KAFKA_TOPIC: transaction-service-topic
+      KAFKA_GROUP_ID: account-group
+    depends_on:
+      - mongodb
+      - kafka1
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+volumes:
+  mongodb_data:
+    driver: local
+  zookeeper_data:
+    driver: local
+  kafka_data1:
+    driver: local
+  postgres_data:
