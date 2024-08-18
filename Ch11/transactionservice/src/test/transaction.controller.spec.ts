@@ -1,5 +1,5 @@
 import { INestApplication } from '@nestjs/common';
-import { testConfiguration } from '../test/test-configuration';
+import { testConfiguration } from './test-configuration';
 import * as request from 'supertest';
 
 describe('AppController (e2e)', () => {
