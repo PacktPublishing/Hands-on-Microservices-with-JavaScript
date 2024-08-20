@@ -1,0 +1,16 @@
+networks:
+  my-app-network:  # Define the network name exactly as used later
+
+services:
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - my-app-network  # Add the service to the network
+
+volumes:
+  mongo_data:
+    driver: local
