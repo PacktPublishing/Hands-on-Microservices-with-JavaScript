@@ -3,7 +3,7 @@ function print(message) {
 }
 
 setTimeout(() => {
-    console.log("Timeout is done. This is your message");
+    print("Message from Timeout");
 }, 0);
 
 print("Message 1");

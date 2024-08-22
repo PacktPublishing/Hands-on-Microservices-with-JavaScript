@@ -1,4 +1,4 @@
-addScriptPromisified("js/app.js")
+addPromisifiedScript("js/app.js")
     .then(() =>
         new Promise((resolve) => {
             setTimeout(() => {

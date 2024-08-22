@@ -22,7 +22,7 @@ function addScript(src, callback) {
     addAsParagraph(id, message, "fail");
   }
 
-  function addScriptPromisified(src) {
+  function addPromisifiedScript(src) {
     return new Promise(function (resolve, reject) {
       let script = document.createElement("script");
       script.src = src;
