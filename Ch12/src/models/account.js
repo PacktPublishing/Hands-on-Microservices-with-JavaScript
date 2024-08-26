@@ -31,4 +31,5 @@ const AccountSchema = new Schema(
     { optimisticConcurrency: true },
 );
 
+
 module.exports = mongoose.model('account', AccountSchema);

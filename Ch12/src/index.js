@@ -2,20 +2,31 @@ const path = require('path');
 const db = require('./db');
 const app = require('./app');
 const { createConfig } = require('./config/config');
+const winston = require('winston');
+
+const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.json(),
+  transports: [
+    new winston.transports.Console(), // Log to the console
+  ],
+});
 
 async function execute() {
+    logger.info('preparing account service ...');
     const configPath = path.join(__dirname, '../configs/.env');
     const appConfig = createConfig(configPath);
-
+    logger.info({configPath:configPath});
     await db.connect(appConfig);
-    const server = app.listen(appConfig.port, () => {
-        console.log('account service started', { port: appConfig.port });
+    const port = process.env.PORT || appConfig.port;
+    const server = app.listen(port, () => {
+        logger.info('account service started', { port: port });
     });
 
     const closeServer = () => {
         if (server) {
             server.close(() => {
-                console.log('server closed');
+                logger.error('server closed');
                 process.exit(1);
             });
         } else {
@@ -24,7 +35,7 @@ async function execute() {
     };
 
     const unexpectedError = (error) => {
-        console.log('unhandled error', { error });
+        logger.error('unhandled error', { error });
         closeServer();
     };
 

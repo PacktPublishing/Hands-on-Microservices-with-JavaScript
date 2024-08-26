@@ -1,0 +1,74 @@
+name: CI/CD Pipeline
+on:
+  push:
+    branches:
+      - main  # The workflow will trigger on pushes to the main branch
+
+jobs:
+  security-scan:
+    name: Run Security Scan
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'
+    - name: Install dependencies
+      run: npm install
+    - name: Run npm audit
+      run: npm audit --audit-level=high
+      
+  check-dependencies:
+    name: Check Dependencies
+    runs-on: ubuntu-latest
+    needs: security-scan
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    - name: Install dependencies
+      run: npm install
+    - name: Check for outdated dependencies
+      run: npm outdated
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    needs: check-dependencies
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Run tests
+      run: npm test
+
+  deploy:
+   name: Deploy to Azure Web App
+   runs-on: ubuntu-latest
+   needs: test  # Run this job after testing succeeds
+   steps:
+   - name: Checkout code
+     uses: actions/checkout@v3
+ 
+   - name: Clean up unnecessary files
+     run: |
+       rm -rf .git
+       rm -rf .github
+       rm -rf _actions
+       rm -rf _PipelineMapping
+       rm -rf _temp
+ 
+   - name: Deploy to Azure Web App
+     uses: azure/webapps-deploy@v3
+     with:
+       app-name: 'account-microservice-webapp'  # Matches the "msdeploySite" in your publish profile
+       publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}  # Ensure this secret contains the publish profile XML content
+       package: ${{ github.workspace }}  
