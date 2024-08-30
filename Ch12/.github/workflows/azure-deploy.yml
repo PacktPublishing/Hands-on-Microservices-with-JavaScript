@@ -2,7 +2,7 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - main  # The workflow will trigger on pushes to the main branch
+      - test-ch12  # The workflow will trigger on pushes to the main branch
 
 jobs:
   security-scan:
