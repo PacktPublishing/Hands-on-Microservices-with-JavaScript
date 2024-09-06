@@ -3,6 +3,9 @@ const { createConfig } = require('../config/config');
 const path = require('path');
 
 class EarthquakeEventProducer {
+    constructor() {
+        this.intervalId = null;
+    }
     #generateEarthquakeEvent() {
         return {
             id: Math.random().toString(36).substring(2, 15),
@@ -33,7 +36,7 @@ class EarthquakeEventProducer {
             console.error(err);
         });
 
-        setInterval(async () => {
+       this.intervalId  = setInterval(async () => {
             const event = await this.#generateEarthquakeEvent();
             // Writes a message to the stream
             const queuedSuccess = stream.write(Buffer.from(JSON.stringify(event)));
@@ -45,6 +48,16 @@ class EarthquakeEventProducer {
                 console.log('Too many messages in queue already');
             }
         }, 100);
+    }
+
+    stopEarthquake() {
+        if (this.intervalId) {
+            clearInterval(this.intervalId);
+            this.intervalId = null;
+            console.log('Earthquake event stream stopped.');
+        } else {
+            console.log('No running earthquake event stream to stop.');
+        }
     }
 }
 
