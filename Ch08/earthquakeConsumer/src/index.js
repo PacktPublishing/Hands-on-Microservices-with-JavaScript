@@ -7,7 +7,7 @@ async function execute() {
     const appConfig = createConfig(configPath);
 
     const server = app.listen(appConfig.port, () => {
-        console.log('earthquake service started', { port: appConfig.port });
+        console.log('earthquake Consumer started', { port: appConfig.port });
     });
 
     const closeServer = () => {

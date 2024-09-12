@@ -1,7 +1,7 @@
 {
-  "name": "earthquakeservice",
+  "name": "earthquakeconsumer",
   "version": "1.0.0",
-  "description": "Earthquake Service",
+  "description": "Earthquake Consumer",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
