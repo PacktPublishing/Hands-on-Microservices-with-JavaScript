@@ -1,0 +1,13 @@
+{
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "bcryptjs": "2.4.3",
+    "dotenv": "16.4.5",
+    "express": "^4.20.0",
+    "joi": "17.13.3",
+    "jsonwebtoken": "9.0.2",
+    "mongoose": "8.4.4"
+  }
+}

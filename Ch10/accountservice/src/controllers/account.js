@@ -1,9 +1,10 @@
 const accountService = require('../services/account');
 
-const { logger } = require('../log/logger');
+//Commented out as logging is now automated/centralized
+//const { logger } = require('../log/logger');
 
 const getAccountById = async (req, res) => {
-     logger.info('getAccountById method called', { accountId: req.params.id });
+    // logger.info('getAccountById method called', { accountId: req.params.id });
     const result = await accountService.getAccountById(req.params.id);
 
     if (result) {
